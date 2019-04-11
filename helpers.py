@@ -1,27 +1,41 @@
 import string
 
 def alphabet_position(character):
-    alphabet = string.ascii_lowercase
+    alphabet = 'abcdefghijklmnopqrstuvwxyz'
     lower = character.lower()
-    if lower.isalpha():
-        return alphabet.index(lower)
-    else:
-        return lower
+    return alphabet.index(lower)
 
+def rotate_string_13(text):
 
-def rotate_character(char,rot):
     rotated = ''
-    alphabet = string.ascii_lowercase
-    rot = int(rot)
-        
-    if char.isalpha():
-        rotated_idx = (alphabet_position(char) + rot) %26
-        if char.isupper(): # if it was uppercase originally, make it uppercase
-            rotated += alphabet[rotated_idx].upper()
-        else: # keep it lowercase
-            rotated += alphabet[rotated_idx]
-    elif char == " ": 
-        rotated += char
+    alphabet = 'abcdefghijklmnopqrstuvwxyz'
+
+    for char in text:
+        rotated_idx = (alphabet_position(char) + 13) % 26
+        if char.isupper():
+            rotated = rotated + alphabet[rotated_idx].upper()
+        else:
+            rotated = rotated + alphabet[rotated_idx]
+
+    return rotated
+
+def rotate_character(char, rot):
+    alphabet = 'abcdefghijklmnopqrstuvwxyz'
+    rotated_idx = (alphabet_position(char) + rot) % 26
+
+    if char.isupper():
+        return alphabet[rotated_idx].upper()
     else:
-        rotated += char
+        return alphabet[rotated_idx]
+
+def rotate_string(text, rot):
+
+    rotated = ''
+
+    for char in text:
+        if (char.isalpha()):
+            rotated = rotated + rotate_character(char, rot)
+        else:
+            rotated = rotated + char
+
     return rotated

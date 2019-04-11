@@ -1,63 +1,60 @@
-from flask import Flask,request
-from helpers import alphabet_position
+from flask import Flask, request, redirect
+from helpers import rotate_string
 import string
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
-form  = """ 
-<html lang="en">
+page_header  = """ <!DOCTYPE html>
+
+<html>
     <head>
-        <style>
-            form {
+    <a>Welcome to WebCaesar</a> 
+    <style>
+    form {{
                 background-color: #eee;
                 padding: 20px;
                 margin: 0 auto;
                 width: 540px;
                 font: 16px sans-serif;
                 border-radius: 10px;
-            }
-            textarea {
+            }}
+    textarea {{
                 margin: 10px 0;
                 width: 540px;
                 height: 120px;
-            }
-
+            }}
         </style>
     </head>
-    <body>
-        <form ("/add", methods=['POST'])>
-            <label for = "rot">Rotate by:</label>
-            <input type="text" name="rot" value="0"/>
-        
-    </form>
+"""
+
+form = """
+<body>
+    <form action="/" method="POST">
+      <label for="text">Enter text:</label>
+      <input type="text" name="text" id="text"/>
+      <label>Rotate by:</label>
+      <input type="textarea" name="rot" id="rot" value="0"/>
+      <button type="submit">Submit Query</button>
+      <textarea name="rotated" id="rotated">{0}</textarea>
+      </form>
     </body>
 </html>
 """
 
-@app.route("/add", methods=['POST'])
-def encrypt(text,rot):
-    rotated = ''
-    alphabet = string.ascii_lowercase
-    rot = int(rot)
 
-    for char in text:
-        if char.isalpha():
-            rotated_idx = (alphabet_position(char) + rot) %26
-            if char.isupper(): # if it was uppercase originally, make it uppercase
-                rotated += alphabet[rotated_idx].upper()
-            else: # keep it lowercase
-                rotated += alphabet[rotated_idx]
-        elif char == " ": 
-            rotated += char
-        else:
-            rotated += char
-    return "<h1>"+rotated+"</h1>"
+@app.route("/", methods=['POST'])
+def encrypt():
+    rot=int(request.form['rot'])
+    text=str(request.form['text'])
 
+    rotated = rotate_string(text,rot)
 
+    return form.format(rotated)
 
+    
 @app.route("/")
 def index():
-    return form.format(form)
+    return form.format("")
 
 app.run()
